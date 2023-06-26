@@ -1,19 +1,58 @@
+generator create {
+    provider="prisma-client-js"
+    previewFeatures = ["postgresqlExtensions"]
+}
 datasource db {
     url=env("DATABASE_URL")
     provider = "postgresql"
+    extensions = [uuidOssp(map: "uuid-ossp")]
 }
 
-generator create {
-    provider="prisma-client-js"
+model Branch{
+    branch_id          String   @map("branch_id")           @db.Uuid()          @default(dbgenerated("GEN_RANDOM_UUID()"))
+    branch_title       String   @map("branch_title")        @db.VarChar(100) 
+    branch_address     String   @map("branch_address")      @db.VarChar() 
+    branch_phone       String   @map("branch_phone")        @db.VarChar(12) 
+    branch_created_at  DateTime @map("branch_created_at")   @db.Timestamp(0)    @default(now())
+
+    users User[]
+
+    @@id([branch_id])
+    @@unique([branch_title])
+    @@map("branchs")
 }
 
-model Admin{
-    admin_id          String  @map("admin_id")          @db.Uuid()          @default(uuid())
-    admin_username    String  @map("admin_username")    @db.VarChar(100) 
-    admin_password    String  @map("admin_password")    @db.VarChar() 
-    admin_role        String  @map("admin_role")        @db.VarChar(100) 
-    admin_branch_id   String  @map("admin_branch_id")   @db.Uuid() 
+model User{
+    user_id          String  @map("user_id")          @db.Uuid()          @default(dbgenerated("GEN_RANDOM_UUID()"))
+    user_name        String  @map("user_name")        @db.VarChar(100) 
+    user_password    String  @map("user_password")    @db.VarChar() 
+    user_role        String  @map("user_role")        @db.VarChar(100)    @default("admin")
+    branch_id        String  @map("branch_id")        @db.Uuid() 
 
-    @@id([admin_id])
-    @@map("admins")
+    teachers Teacher[]
+
+    branchs Branch @relation(fields: [branch_id], references: [branch_id],onDelete: Cascade,onUpdate: NoAction)
+  
+    @@id([user_id])
+    @@unique([user_name])
+    @@map("users")
+}
+model Teacher{
+    teacher_id          String  @map("teacher_id")          @db.Uuid()          @default(dbgenerated("GEN_RANDOM_UUID()"))
+    teacher_first_name  String  @map("teacher_first_name")  @db.VarChar(100) 
+    teacher_last_name   String  @map("teacher_last_name")   @db.VarChar() 
+    teacher_username    String  @map("teacher_username")    @db.VarChar(100) 
+    teacher_age         Int     @map("teacher_age")         @db.Integer()  
+    teacher_phone       String  @map("teacher_phone")       @db.VarChar(12)    
+    teacher_img         String  @map("teacher_img")         @db.VarChar() 
+    teacher_gender      String  @map("teacher_gender")      @db.VarChar() 
+    user_id             String  @map("user_id")             @db.Uuid() 
+    created_at          DateTime @map("created_at")         @db.Timestamp(0)    @default(now())
+    deleted_at          DateTime @map("deleted_at")         @db.Timestamp(0)    @default(now()) 
+
+    users User @relation(fields: [user_id], references: [user_id],onDelete: Cascade,onUpdate: NoAction)
+  
+    @@id([user_id])
+    @@unique([teacher_username])
+    @@map("teachers")
 }
