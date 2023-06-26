@@ -7,7 +7,6 @@ datasource db {
     provider = "postgresql"
     extensions = [uuidOssp(map: "uuid-ossp")]
 }
-
 model Branch{
     branch_id          String   @map("branch_id")           @db.Uuid()          @default(dbgenerated("GEN_RANDOM_UUID()"))
     branch_title       String   @map("branch_title")        @db.VarChar(100) 
