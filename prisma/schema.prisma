@@ -1,0 +1,19 @@
+datasource db {
+    url=env("DATABASE_URL")
+    provider = "postgresql"
+}
+
+generator create {
+    provider="prisma-client-js"
+}
+
+model Admin{
+    admin_id          String  @map("admin_id")          @db.Uuid()          @default(uuid())
+    admin_username    String  @map("admin_username")    @db.VarChar(100) 
+    admin_password    String  @map("admin_password")    @db.VarChar() 
+    admin_role        String  @map("admin_role")        @db.VarChar(100) 
+    admin_branch_id   String  @map("admin_branch_id")   @db.Uuid() 
+
+    @@id([admin_id])
+    @@map("admins")
+}
