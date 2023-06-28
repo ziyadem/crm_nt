@@ -4,12 +4,14 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+} from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import { PrismaService } from '@prisma';
 
 @Injectable()
 export class SuperAdminAuthorizationGuard implements CanActivate {
   @Inject() private readonly jwtService: JwtService;
+  @Inject() private readonly prisma: PrismaService;
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -22,8 +24,18 @@ export class SuperAdminAuthorizationGuard implements CanActivate {
       if (tokenId.startsWith('Bearer ')) {
         tokenId = tokenId.substr('Bearer '.length);
       }
-      let id = await this.jwtService.verifyAsync(tokenId);
-      if (id.id !== '8262c653-594b-43a5-9c19-1d0775028485') {
+      let id = await this.jwtService.verifyAsync(tokenId)
+      console.log(id);
+       
+      const superadmin = await this.prisma.user.findFirst({
+        where: {
+          user_role: 'superadmin',
+          user_id:id.id,
+        },
+      });
+      console.log(superadmin);
+      
+      if (!superadmin) {
         throw new UnauthorizedException('token adminniki emas');
       }
     } catch (e) {

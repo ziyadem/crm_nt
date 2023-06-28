@@ -8,9 +8,11 @@ import { App } from './app'
 setImmediate(async (): Promise<void> => {
   const app = await NestFactory.create<INestApplication>(App)
 
-  const config = new DocumentBuilder()
-    .setDescription('the user Api description')
-    .build();
+  const config = new DocumentBuilder() .addBearerAuth()
+     .setTitle('Nestjs_exap_portfolio example')
+     .setDescription('The nestjs and swager API description')
+     .setVersion('1.0')
+     .build()
 
   const document = SwaggerModule.createDocument(app, config)
 
