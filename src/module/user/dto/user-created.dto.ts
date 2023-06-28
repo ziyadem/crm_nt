@@ -13,11 +13,6 @@ export class UserCreatedDto implements UserCreatedRequest {
   @IsNotEmpty()
   user_password: string
 
-  @ApiProperty({ example: 'admin' })
-  @IsString()
-  @IsNotEmpty()
-  user_role: string
-
   @ApiProperty({ example: 'f86e0071-a080-4ec4-b87c-03849542a871' })
   @IsUUID()
   @IsNotEmpty()

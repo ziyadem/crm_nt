@@ -6,4 +6,4 @@ export const TokenId = createParamDecorator((data, ctx) => {
   delete req.user.exp
   console.log('decorator',req.user)
   return req.user
-});
+})

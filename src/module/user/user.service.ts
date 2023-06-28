@@ -43,7 +43,7 @@ export class UserService {
     }
   }
 
-  async userCreate(payload: UserCreatedRequest) {
+  async adminCreate(payload: UserCreatedRequest) {
     await this.#_checkBranch(payload.branch_id)
     await this.#_checkUser(payload.user_name)
     try {
@@ -52,7 +52,26 @@ export class UserService {
         data: {
           user_name: payload.user_name,
           user_password: hashPas,
-          user_role: payload.user_role,
+          user_role: 'admin',
+          branch_id: payload.branch_id,
+        },
+      });
+      return { message: 'user created' }
+    } catch (error) {
+      throw new InternalServerErrorException()
+    }
+  }
+
+  async teacherCreate(payload: UserCreatedRequest) {
+    await this.#_checkBranch(payload.branch_id)
+    await this.#_checkUser(payload.user_name)
+    try {
+    let hashPas = await bcrypt.hash(payload.user_password, 12)
+      await this.#_prisma.user.create({
+        data: {
+          user_name: payload.user_name,
+          user_password: hashPas,
+          user_role: 'teacher',
           branch_id: payload.branch_id,
         },
       });

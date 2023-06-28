@@ -16,14 +16,21 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('created')
+  @Post('create-admin')
   @ApiBearerAuth()
   @UseGuards(SuperAdminAuthorizationGuard)
   @ApiBody({ type: UserCreatedDto })
-  async userCreate(@TokenId() tokenId: any, @Body() body: UserCreatedDto) {
-    console.log(tokenId);
+  async adminCreate( @Body() body: UserCreatedDto ) {
+    return await this.service.adminCreate(body)
+  }
 
-    return await this.service.userCreate(body);
+  @HttpCode(HttpStatus.OK)
+  @Post('create-teacher')
+  @ApiBearerAuth()
+  @UseGuards(AuthorizationGuard)
+  @ApiBody({ type: UserCreatedDto })
+  async teacherCreate( @Body() body: UserCreatedDto) {
+    return await this.service.teacherCreate(body)
   }
 
   @HttpCode(HttpStatus.OK)

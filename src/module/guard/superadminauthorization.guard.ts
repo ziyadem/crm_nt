@@ -25,16 +25,12 @@ export class SuperAdminAuthorizationGuard implements CanActivate {
         tokenId = tokenId.substr('Bearer '.length);
       }
       let id = await this.jwtService.verifyAsync(tokenId)
-      console.log(id);
-       
       const superadmin = await this.prisma.user.findFirst({
         where: {
           user_role: 'superadmin',
           user_id:id.id,
         },
-      });
-      console.log(superadmin);
-      
+      })     
       if (!superadmin) {
         throw new UnauthorizedException('token adminniki emas');
       }
