@@ -16,6 +16,8 @@ export class SuperAdminAuthorizationGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     let tokenId = request.headers.authorization;
+    console.log(tokenId);
+    
     if (!tokenId) {
       throw new UnauthorizedException('token mavjus emas');
     }

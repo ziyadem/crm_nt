@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config'
 import { dbConfig } from '@config'
 import { AdminModule } from '@module'
 import { UserModule } from '@module'
+import { BranchModule } from '@module'
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { UserModule } from '@module'
       isGlobal: true,
     }),
     AdminModule,
-    UserModule
+    UserModule,
+    BranchModule
   ],
 })
 export class App {}
